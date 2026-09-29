@@ -25,3 +25,5 @@ header{position:sticky;top:0;z-index:20;background:#fffffff2;backdrop-filter:blu
 @media(prefers-reduced-motion:reduce){.cat-tile,.product-card>img{transition:none}}
 .banner-media img{height:470px;border-radius:12px 12px 70px 12px}.section-img{display:block;width:100%;max-width:520px;height:360px;object-fit:cover;border-radius:10px 10px 50px 10px;margin-top:36px}
 @media(max-width:1000px){.banner-media img{height:340px}}@media(max-width:650px){.banner-media img{height:240px}.section-img{height:240px;margin-top:24px}}
+.location{display:grid;grid-template-columns:.8fr 1.2fr;gap:60px;align-items:center;padding-top:0}.location address{font-style:normal;font-size:1.1rem;margin:24px 0 28px;color:var(--ink)}.map{width:100%;height:380px;border:0;border-radius:10px;background:var(--soft)}.route-link{display:inline-block;margin-top:10px;color:#ff9959;font-weight:700;font-size:.9rem}
+@media(max-width:650px){.location{grid-template-columns:1fr;gap:28px}.location .button{width:100%}.map{height:280px}}
