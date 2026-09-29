@@ -69,5 +69,6 @@
     try { await navigator.clipboard.writeText(text.value); status.textContent = 'Lista copiada! Abra o WhatsApp e cole na conversa.'; }
     catch { text.focus(); text.select(); status.textContent = 'Selecione e copie a lista acima, depois cole na conversa do WhatsApp.'; }
   });
+  document.querySelectorAll('[data-category]').forEach(link => link.addEventListener('click', () => { search.value = ''; onlySelected = false; category.value = link.dataset.category; limit = 12; render(); }));
   render(); updateList();
 })();
