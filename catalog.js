@@ -9,7 +9,8 @@
   const count = document.getElementById('catalog-count');
   const more = document.getElementById('load-products');
   const selectedFilter = document.getElementById('show-selected');
-  let limit = 12, onlySelected = false;
+  const pageSize = window.matchMedia('(max-width: 650px)').matches ? 8 : 12;
+  let limit = pageSize, onlySelected = false;
   const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const titleCase = name => name.toLocaleLowerCase('pt-BR').replace(/(^|\s)(epi|pvc|eva|tnt|glp|abs|nrrsf|3m|din)(?=\s|$)/g, (_, space, word) => space + word.toUpperCase()).replace(/^./, ch => ch.toUpperCase());
   const element = (tag, className, text) => { const el = document.createElement(tag); if (className) el.className = className; if (text) el.textContent = text; return el; };
@@ -56,19 +57,19 @@
     updateList(); if (onlySelected) render();
   });
   document.getElementById('selected-products').addEventListener('click', event => { const id = event.target.dataset.removeId; if (!id) return; selected.delete(id); updateList(); render(); });
-  function reset() { search.value = ''; category.value = ''; onlySelected = false; limit = 12; render(); }
+  function reset() { search.value = ''; category.value = ''; onlySelected = false; limit = pageSize; render(); }
   document.getElementById('catalog-reset').addEventListener('click', reset);
   document.getElementById('empty-reset').addEventListener('click', reset);
-  search.addEventListener('input', () => { limit = 12; render(); });
-  category.addEventListener('change', () => { limit = 12; render(); });
-  selectedFilter.addEventListener('click', () => { onlySelected = !onlySelected; limit = 12; render(); });
-  more.addEventListener('click', () => { const previous = Math.min(limit, filtered().length); limit += 12; render(); const next = grid.children[previous]?.querySelector('input'); next?.focus({preventScroll:true}); });
+  search.addEventListener('input', () => { limit = pageSize; render(); });
+  category.addEventListener('change', () => { limit = pageSize; render(); });
+  selectedFilter.addEventListener('click', () => { onlySelected = !onlySelected; limit = pageSize; render(); });
+  more.addEventListener('click', () => { const previous = Math.min(limit, filtered().length); limit += pageSize; render(); const next = grid.children[previous]?.querySelector('input'); next?.focus({preventScroll:true}); });
   document.getElementById('clear-selection').addEventListener('click', () => { selected.clear(); onlySelected = false; updateList(); render(); });
   document.getElementById('copy-selection').addEventListener('click', async () => {
     const text = document.getElementById('quote-text'); const status = document.getElementById('selection-status');
     try { await navigator.clipboard.writeText(text.value); status.textContent = 'Lista copiada! Abra o WhatsApp e cole na conversa.'; }
     catch { text.focus(); text.select(); status.textContent = 'Selecione e copie a lista acima, depois cole na conversa do WhatsApp.'; }
   });
-  document.querySelectorAll('[data-category]').forEach(link => link.addEventListener('click', () => { search.value = ''; onlySelected = false; category.value = link.dataset.category; limit = 12; render(); }));
+  document.querySelectorAll('[data-category]').forEach(link => link.addEventListener('click', () => { search.value = ''; onlySelected = false; category.value = link.dataset.category; limit = pageSize; render(); }));
   render(); updateList();
 })();
