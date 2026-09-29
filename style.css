@@ -27,3 +27,18 @@ header{position:sticky;top:0;z-index:20;background:#fffffff2;backdrop-filter:blu
 @media(max-width:1000px){.banner-media img{height:340px}}@media(max-width:650px){.banner-media img{height:240px}.section-img{height:240px;margin-top:24px}}
 .location{display:grid;grid-template-columns:.8fr 1.2fr;gap:60px;align-items:center;padding-top:0}.location address{font-style:normal;font-size:1.1rem;margin:24px 0 28px;color:var(--ink)}.map{width:100%;height:380px;border:0;border-radius:10px;background:var(--soft)}.route-link{display:inline-block;margin-top:10px;color:#ff9959;font-weight:700;font-size:.9rem}
 @media(max-width:650px){.location{grid-template-columns:1fr;gap:28px}.location .button{width:100%}.map{height:280px}}
+/* Ajustes mobile */
+.proof p{color:#c4cbc5}.proof-lead{margin-top:24px}
+@media(max-width:650px){
+.small{font-size:.7rem}
+.banner-tag{font-size:.75rem;padding-right:12px}
+.banner .intro{margin:18px 0 24px}
+.banner-perks{grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px;padding-top:18px}.banner-perks li{font-size:.7rem}.banner-perks b{font-size:.85rem}
+.banner-badge{display:none}
+.split{gap:24px}
+.benefits{gap:22px;margin-top:24px}.benefits article{padding-top:16px}.benefits h3{margin-top:8px;font-size:1.08rem}.benefits p{margin-top:8px;font-size:.95rem}
+.proof h2{font-size:1.75rem}
+.final-cta h2{font-size:clamp(1.8rem,8vw,2.3rem)}
+.segments p{line-height:1.8}
+}
+@media(max-width:1000px) and (min-width:651px){.section-heading{display:block}.section-heading>p{margin-top:18px;max-width:560px}}
