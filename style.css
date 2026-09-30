@@ -42,3 +42,12 @@ header{position:sticky;top:0;z-index:20;background:#fffffff2;backdrop-filter:blu
 .segments p{line-height:1.8}
 }
 @media(max-width:1000px) and (min-width:651px){.section-heading{display:block}.section-heading>p{margin-top:18px;max-width:560px}}
+/* Título, rodapé e modal de cotação */
+.banner h1 .nw{white-space:nowrap}.banner h1{font-size:clamp(2.2rem,3.6vw,3.5rem);text-wrap:balance}
+footer .whatsapp-link{display:block;margin-top:8px;color:#ff9959;font-weight:700}
+.lead-modal{border:0;border-radius:12px;padding:0;width:min(460px,calc(100% - 32px));box-shadow:0 30px 80px #0007}.lead-modal::backdrop{background:#101512b3}
+.lead-modal form{border:0;box-shadow:none;padding:32px;position:relative}.lead-modal h2{font-size:1.6rem;margin-bottom:10px}.lead-modal .eyebrow{margin-bottom:12px}.lead-modal .micro{margin:0 0 20px}.lead-modal form>.micro:last-child{margin:14px 0 0}.lead-modal .button{width:100%;margin-top:6px}
+.modal-close{position:absolute;top:12px;right:14px;border:0;background:none;font-size:1.8rem;line-height:1;cursor:pointer;color:var(--muted);padding:6px}
+@media(max-width:650px){.lead-modal form{padding:24px 20px}.banner h1 .nw{white-space:normal}}
+.banner h1{font-size:clamp(2.2rem,3.3vw,2.7rem)}.banner h1 .nw{display:inline-block}
+@media(max-width:1000px){.banner h1{font-size:clamp(2rem,5.2vw,2.7rem)}}
