@@ -25,7 +25,7 @@
     grid.replaceChildren();
     found.slice(0, limit).forEach(p => {
       const card = element('article', 'product-card');
-      const img = document.createElement('img'); img.src = p.image; img.alt = titleCase(p.name); img.loading = 'lazy'; img.width = 340; img.height = 220;
+      const img = document.createElement('img'); img.src = (window.ON_ASSET_BASE || '') + p.image; img.alt = titleCase(p.name); img.loading = 'lazy'; img.width = 340; img.height = 220;
       const body = element('div', 'product-body');
       const badge = element('p', 'product-category', p.category);
       const name = element('h3', '', titleCase(p.name));

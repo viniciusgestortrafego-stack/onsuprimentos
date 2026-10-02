@@ -25,6 +25,12 @@ Abra http://localhost:4173.
 
 Envie o conteúdo desta pasta a uma hospedagem de sites estáticos. O arquivo de entrada é `index.html`. Não são necessários servidor de aplicação, instalação de pacotes ou variáveis de ambiente.
 
+## WordPress
+
+`dist/on-suprimentos-tema-wordpress.zip` é um tema do WordPress com a landing page completa. Para instalar: Aparência → Temas → Adicionar novo → Enviar tema → escolha o `.zip` → Instalar → Ativar. A página inicial do site passa a ser a landing page.
+
+O tema já inclui o Google Tag Manager; não instale o GTM de novo por plugin. Para gerar o `.zip` depois de alterar o site: `python3 scripts/build-wordpress.py`.
+
 ## Formulário de leads
 
 Os botões "FAÇA SUA COTAÇÃO" abrem um formulário (nome, telefone e e-mail) antes de levar ao WhatsApp. A mensagem sai preenchida com esses dados e com a lista do catálogo, se houver. O formulário "Solicite seu orçamento" também abre o WhatsApp preenchido enquanto `leadEndpoint` estiver vazio em `app.js`. Os dados não são gravados em nenhum outro lugar. Nunca inclua credenciais privadas no JavaScript do navegador.
