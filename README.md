@@ -37,7 +37,9 @@ O tema já inclui o Google Tag Manager; não instale o GTM de novo por plugin. P
 
 ## Formulário de leads
 
-Os botões "FAÇA SUA COTAÇÃO" abrem um formulário (nome, telefone e e-mail) antes de levar ao WhatsApp. A mensagem sai preenchida com esses dados e com a lista do catálogo, se houver. O formulário "Solicite seu orçamento" também abre o WhatsApp preenchido enquanto `leadEndpoint` estiver vazio em `app.js`. Os dados não são gravados em nenhum outro lugar. Nunca inclua credenciais privadas no JavaScript do navegador.
+Os botões "FAÇA SUA COTAÇÃO" abrem um formulário (nome, telefone e e-mail) antes de levar ao WhatsApp, e o formulário "Solicite seu orçamento" também abre o WhatsApp preenchido. Os dois enviam o cadastro para a planilha "onsuprimentos:leads" pelo Google Apps Script em `scripts/google-apps-script.gs`, com origem, produtos selecionados, UTMs, gclid e fbclid.
+
+Para ativar: instale o script na planilha (instruções no topo do arquivo), publique como app da Web e coloque o URL `/exec` em `leadEndpoint`, em `app.js`. Depois gere de novo os arquivos de `dist/`.
 
 Para o Google Tag Manager, o site envia ao `dataLayer` os eventos `cta_cotacao_click` e `lead_cotacao`, sem dados pessoais.
 
