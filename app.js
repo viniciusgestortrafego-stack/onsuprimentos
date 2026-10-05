@@ -9,7 +9,7 @@ const leadEndpoint='https://script.google.com/macros/s/AKfycbxkznTKFfKpCEY3QBiQ8
 // Origem do acesso (anúncios), guardada na sessão para não se perder ao navegar.
 const attribution=(()=>{const keys=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid'];const params=new URLSearchParams(location.search);let saved={};try{saved=JSON.parse(sessionStorage.getItem('on_attribution')||'{}');}catch{}keys.forEach(k=>{if(params.get(k))saved[k]=params.get(k);});try{sessionStorage.setItem('on_attribution',JSON.stringify(saved));}catch{}return saved;})();
 // Envio sem esperar resposta: o WhatsApp abre na hora e a planilha recebe em segundo plano.
-const sendLead=lead=>{if(!leadEndpoint)return;try{fetch(leadEndpoint,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...attribution,...lead,pagina:location.href})});}catch{}};
+const sendLead=lead=>{if(!leadEndpoint)return;try{fetch(leadEndpoint,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...attribution,...lead,brand:'on-suprimentos',pagina:location.href})});}catch{}};
 
 // Nome, telefone e e-mail antes de seguir para a cotação no WhatsApp.
 const modal=document.getElementById('lead-modal');
