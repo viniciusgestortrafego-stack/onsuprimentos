@@ -5,7 +5,7 @@ const track=(event,data)=>{window.dataLayer=window.dataLayer||[];window.dataLaye
 document.querySelectorAll('[data-wa]').forEach(a=>{a.href=whatsappUrl;a.target='_blank';a.rel='noopener noreferrer'});
 
 // URL do app da Web do Google Apps Script (scripts/google-apps-script.gs) que grava na planilha de leads.
-const leadEndpoint='';
+const leadEndpoint='https://script.google.com/macros/s/AKfycbxkznTKFfKpCEY3QBiQ8FHEuQH8WTf2LO2irOGBET625_XASC8dHQCQ2catmxZeRzjo/exec';
 // Origem do acesso (anúncios), guardada na sessão para não se perder ao navegar.
 const attribution=(()=>{const keys=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid'];const params=new URLSearchParams(location.search);let saved={};try{saved=JSON.parse(sessionStorage.getItem('on_attribution')||'{}');}catch{}keys.forEach(k=>{if(params.get(k))saved[k]=params.get(k);});try{sessionStorage.setItem('on_attribution',JSON.stringify(saved));}catch{}return saved;})();
 // Envio sem esperar resposta: o WhatsApp abre na hora e a planilha recebe em segundo plano.
