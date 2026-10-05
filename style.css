@@ -52,3 +52,4 @@ footer .whatsapp-link{display:block;margin-top:8px;color:var(--orange);font-weig
 .banner h1{font-size:clamp(2.2rem,3.3vw,2.7rem)}.banner h1 .nw{display:inline-block}
 @media(max-width:1000px){.banner h1{font-size:clamp(2rem,5.2vw,2.7rem)}}
 .banner-perks.two{grid-template-columns:repeat(2,minmax(0,220px))}@media(max-width:650px){.banner-perks.two{grid-template-columns:1fr 1fr}}
+#contato .footer-bottom{display:block}#contato .footer-bottom a{color:var(--orange);font-weight:700;font-size:inherit;text-decoration:none}#contato .footer-bottom a:hover{text-decoration:underline}
