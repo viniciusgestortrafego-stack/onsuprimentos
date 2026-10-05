@@ -1,12 +1,16 @@
 /**
  * Receptor de leads da landing page ON Suprimentos.
  *
- * Instalação: na planilha "onsuprimentos:leads", abra Extensões → Apps Script,
- * apague o conteúdo, cole este código e salve. Depois: Implantar → Nova implantação
- * → tipo "App da Web" → Executar como: "Eu" → Quem pode acessar: "Qualquer pessoa"
- * → Implantar → autorize → copie o URL do app da Web (termina em /exec).
+ * Grava na aba "ON SUPRIMENTOS" da planilha "GRUPO ESTRUTALICA - LEADS".
+ *
+ * Instalação: em Extensões → Apps Script, apague o conteúdo, cole este código e salve.
+ * Primeira vez: Implantar → Nova implantação → tipo "App da Web" → Executar como: "Eu"
+ * → Quem pode acessar: "Qualquer pessoa" → Implantar → autorize → copie o URL (/exec).
+ * Atualização (mantém o mesmo URL): Implantar → Gerenciar implantações → lápis
+ * → Versão: "Nova versão" → Implantar.
  */
-const SHEET_ID = '1weZ4MeKEOkiVnWr_SBn-2onwgrLPK9S_mfPD8mwiqHM';
+const SHEET_ID = '1Zjcq6qfUSIAb-JTCHyJDxl06PqqTWpqvS1bCbU5C4r0';
+const SHEET_NAME = 'ON SUPRIMENTOS';
 const COLUMNS = [
   ['data', 'Data'],
   ['origem', 'Origem'],
@@ -32,7 +36,8 @@ function doPost(e) {
   try {
     let data = {};
     try { data = JSON.parse(e.postData.contents); } catch (err) { data = e.parameter || {}; }
-    const sheet = SpreadsheetApp.openById(SHEET_ID).getSheets()[0];
+    const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
+    if (!sheet) throw new Error('Aba "' + SHEET_NAME + '" não encontrada.');
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(COLUMNS.map(c => c[1]));
       sheet.setFrozenRows(1);
