@@ -31,6 +31,10 @@ Envie o conteúdo desta pasta a uma hospedagem de sites estáticos. O arquivo de
 
 O tema já inclui o Google Tag Manager; não instale o GTM de novo por plugin. Para gerar o `.zip` depois de alterar o site: `python3 scripts/build-wordpress.py`.
 
+### Elementor (widget HTML)
+
+`dist/on-suprimentos-elementor.html` é a landing page em um bloco único para colar no widget **HTML** do Elementor. O CSS fica restrito ao bloco (`#on-lp`) e as imagens vêm do jsDelivr a partir deste repositório público, fixadas em um commit. Para gerar de novo: `python3 scripts/build-elementor.py`.
+
 ## Formulário de leads
 
 Os botões "FAÇA SUA COTAÇÃO" abrem um formulário (nome, telefone e e-mail) antes de levar ao WhatsApp. A mensagem sai preenchida com esses dados e com a lista do catálogo, se houver. O formulário "Solicite seu orçamento" também abre o WhatsApp preenchido enquanto `leadEndpoint` estiver vazio em `app.js`. Os dados não são gravados em nenhum outro lugar. Nunca inclua credenciais privadas no JavaScript do navegador.
