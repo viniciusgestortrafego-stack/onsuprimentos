@@ -6,10 +6,23 @@ document.querySelectorAll('[data-wa]').forEach(a=>{a.href=whatsappUrl;a.target='
 
 // URL do app da Web do Google Apps Script (scripts/google-apps-script.gs) que grava na planilha de leads.
 const leadEndpoint='https://script.google.com/macros/s/AKfycbxAoy4dqn2MpZLo4XkhukZwYf2-eS-BAtvqsi4C2YQEbd872dRHULfAUbyQXZ_CAz7S/exec';
-// Origem do acesso (anúncios), guardada na sessão para não se perder ao navegar.
-const attribution=(()=>{const keys=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid'];const params=new URLSearchParams(location.search);let saved={};try{saved=JSON.parse(sessionStorage.getItem('on_attribution')||'{}');}catch{}keys.forEach(k=>{if(params.get(k))saved[k]=params.get(k);});try{sessionStorage.setItem('on_attribution',JSON.stringify(saved));}catch{}return saved;})();
+// Origem do acesso (anúncios): guarda a da primeira visita por 90 dias no navegador (localStorage).
+// Se a primeira visita veio sem parâmetros de anúncio e uma visita seguinte traz, esta passa a valer.
+const attribution=(()=>{
+  const KEY='on_attribution',DAYS=90,keys=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','ad_id','gclid','gbraid','wbraid','fbclid'];
+  const params=new URLSearchParams(location.search);
+  const current={};keys.forEach(k=>{current[k]=(params.get(k)||'').slice(0,300);});
+  const hasAd=o=>keys.some(k=>o[k]);
+  let saved=null;
+  try{const raw=JSON.parse(localStorage.getItem(KEY)||'null');if(raw&&raw.expires>Date.now()&&raw.data)saved=raw.data;}catch{}
+  if(!saved||(!hasAd(saved)&&hasAd(current))){
+    saved={...current,landing_page:location.href.slice(0,500),referrer:(document.referrer||'').slice(0,500)};
+    try{localStorage.setItem(KEY,JSON.stringify({expires:Date.now()+DAYS*864e5,data:saved}));}catch{}
+  }
+  return saved;
+})();
 // Envio sem esperar resposta: o WhatsApp abre na hora e a planilha recebe em segundo plano.
-const sendLead=lead=>{if(!leadEndpoint)return;try{fetch(leadEndpoint,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...attribution,...lead,brand:'on-suprimentos',pagina:location.href})});}catch{}};
+const sendLead=lead=>{if(!leadEndpoint)return;try{fetch(leadEndpoint,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...attribution,...lead,brand:'on-suprimentos'})});}catch{}};
 
 // Nome, telefone e e-mail antes de seguir para a cotação no WhatsApp.
 const modal=document.getElementById('lead-modal');

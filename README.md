@@ -37,7 +37,7 @@ O tema já inclui o Google Tag Manager; não instale o GTM de novo por plugin. P
 
 ## Formulário de leads
 
-Os botões "FAÇA SUA COTAÇÃO" abrem um formulário (nome, telefone e e-mail) antes de levar ao WhatsApp, e o formulário "Solicite seu orçamento" também abre o WhatsApp preenchido. Os dois enviam o cadastro para a aba "ON SUPRIMENTOS" da planilha "GRUPO ESTRUTALICA - LEADS" pelo Google Apps Script em `scripts/google-apps-script.gs`. O mesmo script atende as páginas Estrutec, Estrutálica Civil e Estrutálica Automotiva, cada uma na sua aba (campo `brand`), com origem, produtos selecionados, UTMs, gclid e fbclid.
+Os botões "FAÇA SUA COTAÇÃO" abrem um formulário (nome, telefone e e-mail) antes de levar ao WhatsApp, e o formulário "Solicite seu orçamento" também abre o WhatsApp preenchido. Os dois enviam o cadastro para a aba "ON SUPRIMENTOS" da planilha "GRUPO ESTRUTALICA - LEADS" pelo Google Apps Script em `scripts/google-apps-script.gs`. O mesmo script atende as páginas Estrutec, Estrutálica Civil e Estrutálica Automotiva, cada uma na sua aba (campo `brand`), com origem, produtos selecionados e o rastreio do anúncio (utm_source, utm_medium, utm_campaign, utm_content, utm_term, ad_id, gclid, gbraid, wbraid, fbclid, landing_page e referrer). O site guarda a origem da **primeira visita por 90 dias** no navegador. No fim de cada aba da planilha, o script cria as colunas de rastreio que faltarem, sem mexer nas colunas existentes.
 
 Para ativar: instale o script na planilha (instruções no topo do arquivo), publique como app da Web e coloque o URL `/exec` em `leadEndpoint`, em `app.js`. Depois gere de novo os arquivos de `dist/`.
 

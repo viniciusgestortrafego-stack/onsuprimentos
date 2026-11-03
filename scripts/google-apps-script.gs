@@ -7,6 +7,11 @@
  *   estrutalica-civil → ESTRUTALICA CIVIL  estrutalica-automotiva → ESTRUTALICA AUTOMOTIVA
  * Sem "brand", o cadastro vai para ON SUPRIMENTOS (versão da página já publicada).
  *
+ * UTMs e rastreio: os campos de TRACKING (utm_source, utm_medium, utm_campaign, utm_content,
+ * utm_term, ad_id, gclid, gbraid, wbraid, fbclid, landing_page, referrer) são gravados no FIM de
+ * cada aba. A coluna é procurada pelo título na linha 1 e, se não existir, é criada no fim, sem
+ * mexer nas colunas que já existem. Campo vazio = célula vazia.
+ *
  * Instalação: em Extensões → Apps Script, apague o conteúdo, cole este código e salve.
  * Primeira vez: Implantar → Nova implantação → tipo "App da Web" → Executar como: "Eu"
  * → Quem pode acessar: "Qualquer pessoa" → Implantar → autorize → copie o URL (/exec).
@@ -14,20 +19,23 @@
  * → Versão: "Nova versão" → Implantar.
  */
 const SHEET_ID = '1Zjcq6qfUSIAb-JTCHyJDxl06PqqTWpqvS1bCbU5C4r0';
-const UTM = [
-  ['utm_source', 'utm_source'], ['utm_medium', 'utm_medium'], ['utm_campaign', 'utm_campaign'],
-  ['utm_term', 'utm_term'], ['utm_content', 'utm_content'], ['gclid', 'gclid'], ['fbclid', 'fbclid'],
+
+// Campos de rastreio de anúncios, gravados no fim de todas as abas (o título da coluna é o nome do campo).
+const TRACKING = [
+  'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
+  'ad_id', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'landing_page', 'referrer',
 ];
 
 // Colunas de cada aba, na ordem da planilha: [chave enviada pelo site, título da coluna].
 // "data" é a data do envio; "requestId" evita linhas duplicadas quando o site reenvia.
+// As colunas de TRACKING não entram aqui: são tratadas à parte, sempre depois destas.
 const BRANDS = {
   'on-suprimentos': {
     aba: 'ON SUPRIMENTOS',
     colunas: [
       ['data', 'Data'], ['origem', 'Origem'], ['nome', 'Nome'], ['telefone', 'Telefone'],
       ['email', 'E-mail'], ['empresa', 'Empresa'], ['necessidade', 'Necessidade'],
-      ['produtos', 'Produtos selecionados'], ...UTM, ['pagina', 'Página'],
+      ['produtos', 'Produtos selecionados'],
     ],
   },
   'estrutec': {
@@ -35,7 +43,7 @@ const BRANDS = {
     colunas: [
       ['data', 'Data'], ['nome', 'Nome'], ['telefone', 'WhatsApp'], ['cidade', 'Cidade'],
       ['imovel', 'O que deseja proteger'], ['interesse', 'O que procura'], ['origem', 'Origem'],
-      ['requestId', 'ID da solicitação'], ...UTM, ['pagina', 'Página'],
+      ['requestId', 'ID da solicitação'],
     ],
   },
   'estrutalica-civil': {
@@ -60,18 +68,23 @@ function doPost(e) {
   try {
     let dados = {};
     try { dados = JSON.parse(e.postData.contents); } catch (err) { dados = e.parameter || {}; }
+    if (dados.landing_page == null && dados.pagina != null) dados.landing_page = dados.pagina; // versão antiga do site
     const requestId = String(dados.requestId || '').slice(0, 64);
     const config = BRANDS[dados.brand || 'on-suprimentos'];
     if (!config) return saida({ ok: false, erro: 'marca desconhecida' });
     if (dados.website) return saida({ ok: true, requestId }); // campo isca preenchido por robô
 
     const aba = obterAba(config);
+    const cabecalho = prepararCabecalho(aba, config);
     const colunaId = config.colunas.findIndex(([chave]) => chave === 'requestId') + 1;
     if (requestId && colunaId && aba.getLastRow() > 1) {
       const ids = aba.getRange(2, colunaId, aba.getLastRow() - 1, 1).getValues().flat().map(String);
       if (ids.indexOf(requestId) !== -1) return saida({ ok: true, requestId }); // reenvio: não duplica
     }
-    aba.appendRow(config.colunas.map(([chave]) => chave === 'data' ? new Date() : limpar(dados[chave])));
+    const linha = new Array(cabecalho.length).fill('');
+    config.colunas.forEach(([chave], i) => { linha[i] = chave === 'data' ? new Date() : limpar(dados[chave]); });
+    TRACKING.forEach(campo => { linha[cabecalho.indexOf(campo)] = limpar(dados[campo]); });
+    aba.appendRow(linha);
     return saida({ ok: true, requestId });
   } catch (erro) {
     return saida({ ok: false });
@@ -86,13 +99,28 @@ function doGet() {
 
 function obterAba(config) {
   const planilha = SpreadsheetApp.openById(SHEET_ID);
-  const aba = planilha.getSheetByName(config.aba) || planilha.insertSheet(config.aba);
+  return planilha.getSheetByName(config.aba) || planilha.insertSheet(config.aba);
+}
+
+// Garante o cabeçalho: aba nova ganha colunas da empresa + rastreio; aba existente só ganha,
+// no fim, as colunas de rastreio que ainda não tiver. Devolve os títulos da linha 1.
+function prepararCabecalho(aba, config) {
   if (aba.getLastRow() === 0) {
-    aba.appendRow(config.colunas.map(([, titulo]) => titulo));
+    aba.appendRow(config.colunas.map(([, titulo]) => titulo).concat(TRACKING));
     aba.setFrozenRows(1);
-    aba.getRange(1, 1, 1, config.colunas.length).setFontWeight('bold');
+    aba.getRange(1, 1, 1, config.colunas.length + TRACKING.length).setFontWeight('bold');
   }
-  return aba;
+  let cabecalho = aba.getRange(1, 1, 1, Math.max(aba.getLastColumn(), 1)).getValues()[0].map(String);
+  TRACKING.forEach(campo => {
+    if (cabecalho.indexOf(campo) === -1) {
+      // Se a linha 1 tiver células vazias no fim, aproveita a primeira; senão cria uma coluna nova.
+      let coluna = cabecalho.length;
+      while (coluna > 0 && cabecalho[coluna - 1] === '') coluna--;
+      aba.getRange(1, coluna + 1).setValue(campo).setFontWeight('bold');
+      cabecalho = cabecalho.slice(0, coluna).concat([campo]);
+    }
+  });
+  return cabecalho;
 }
 
 // Corta o tamanho e impede que o texto vire fórmula na planilha.
